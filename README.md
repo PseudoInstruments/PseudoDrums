@@ -1,2 +1,2 @@
 # PseudoDrums
-Drums made with ESP32
+Drums made with ESP32.
