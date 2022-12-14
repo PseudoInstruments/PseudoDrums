@@ -1,5 +1,6 @@
 #include "ofApp.h"
 #include "ofxDeSynthUI.h"
+#include "Sound.h"
 
 DeUI::UI* UI = nullptr;
 //--------------------------------------------------------------
@@ -13,7 +14,7 @@ void ofApp::setup(){
 	UI->setup();
 	UI->load_json();
 
-	// Screen 96x68 HX1230
+	Sound::create();
 }
 
 //--------------------------------------------------------------
@@ -79,8 +80,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-	cout << "Resized to " << w << " x " << h << endl;
-
+	// cout << "Resized to " << w << " x " << h << endl;
 }
 
 //--------------------------------------------------------------
