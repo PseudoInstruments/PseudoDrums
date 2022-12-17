@@ -1,6 +1,7 @@
 #include "Sound.h"
 #include "DeTypesAssert.h"
 #include "ofxSoundUtils.h"
+#include "Synth.h"
 
 Sound* g_Sound = nullptr;
 
@@ -17,6 +18,17 @@ Sound* Sound::sound() {
 
 //--------------------------------------------------------------
 void Sound::setup() {
+	SETTINGS.setup();
+	for (int i = 0; i < CH; i++) {
+		SYNTH[i].setup();
+	}
+	setup_sound_stream();
+
+}
+
+//--------------------------------------------------------------
+void Sound::setup_sound_stream()
+{
 	//sound_stream_.printDeviceList();
 	auto devices = sound_stream_.getDeviceList(ofSoundDevice::Api::MS_DS);
 	cout << devices << endl;
@@ -29,19 +41,13 @@ void Sound::setup() {
 	// settings.api = ofSoundDevice::Api::PULSE;
 	//auto devices = sound_stream_.getMatchingDevices("default");
 
-
-	stream_sr_ = 22050;
-	int buffer_size = 128;
-	int num_buffers = 4;
-
 	settings.setOutListener(this);
-	settings.sampleRate = stream_sr_;
+	settings.sampleRate = SETTINGS.sr;
 	settings.numOutputChannels = 2;
 	settings.numInputChannels = 2;
-	settings.bufferSize = buffer_size;
-	settings.numBuffers = num_buffers;
+	settings.bufferSize = SETTINGS.buffer_size;
+	settings.numBuffers = SETTINGS.num_buffers;
 	sound_stream_.setup(settings);
-
 }
 
 //--------------------------------------------------------------

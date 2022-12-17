@@ -32,7 +32,7 @@
 #define Y3 (Y2 + SYsmall)
 #define Y4 (Y3 + SYsmall)
 
-#define Marks (9)
+#define Marks (11)
 #define FaderR (30)
 
 #define PANELWIDTH (X3 + SXsmall + XVOL)

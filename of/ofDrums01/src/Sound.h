@@ -10,13 +10,12 @@ public:
 	void setup();
 	void exit();
 	void update();
-	void draw(const ofRectangle& rect_pix);
 
 	void audioOut(ofSoundBuffer& output);
 
 protected:
-	int stream_sr_ = 0;
 	ofSoundStream sound_stream_;
+	void setup_sound_stream();
 
 };
 

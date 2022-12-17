@@ -1,6 +1,7 @@
 #include "ofApp.h"
 #include "ofxDeSynthUI.h"
 #include "Sound.h"
+#include "Synth.h"
 
 DeUI::UI* UI = nullptr;
 //--------------------------------------------------------------
@@ -13,6 +14,8 @@ void ofApp::setup(){
 	UI = new DeUI::UI();
 	UI->setup();
 	UI->load_json();
+
+
 
 	Sound::create();
 }
