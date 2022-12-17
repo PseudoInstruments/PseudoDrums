@@ -6,9 +6,9 @@
 Sound* g_Sound = nullptr;
 
 //--------------------------------------------------------------
-void Sound::create() {
+void Sound::create(DeUI::UI* UI) {
 	g_Sound = new Sound;
-	g_Sound->setup();
+	g_Sound->setup(UI);
 }
 
 //--------------------------------------------------------------
@@ -17,10 +17,11 @@ Sound* Sound::sound() {
 }
 
 //--------------------------------------------------------------
-void Sound::setup() {
+void Sound::setup(DeUI::UI* UI) {
+	UI_ = UI;
 	SETTINGS.setup();
 	for (int i = 0; i < CH; i++) {
-		SYNTH[i].setup();
+		SYNTH[i].setup(i, UI);
 	}
 	setup_sound_stream();
 

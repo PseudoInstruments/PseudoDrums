@@ -17,12 +17,14 @@ void ofApp::setup(){
 
 
 
-	Sound::create();
+	Sound::create(UI);
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
 	UI->save_json();
+	delete UI;
+	UI = nullptr;
 }
 
 //--------------------------------------------------------------

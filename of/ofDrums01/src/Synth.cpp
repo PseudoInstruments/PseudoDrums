@@ -22,8 +22,19 @@ void SynthSettings::load_json() {
 
 
 //--------------------------------------------------------------
-void Synth::setup() {
+void Synth::setup(int i, DeUI::UI* UI) {
+	i_ = i;
+	UI_ = UI;
 
+	Vol = &UI->Vol[i];
+	SR = &UI->SR[i];
+	Freq = &UI->Freq[i];
+	FreqDelta = &UI->FreqDelta[i];
+	Duration = &UI->Duration[i];
+	Release = &UI->Release[i];
+	Timbre = &UI->Timbre[i];
+	Noise = &UI->Noise[i];
+	Pad = &UI->Pad[i];
 
 }
 
