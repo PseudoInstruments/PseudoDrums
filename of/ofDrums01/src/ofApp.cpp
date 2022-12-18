@@ -15,8 +15,6 @@ void ofApp::setup(){
 	UI->setup();
 	UI->load_json();
 
-
-
 	Sound::create(UI);
 }
 

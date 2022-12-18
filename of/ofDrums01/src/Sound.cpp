@@ -58,12 +58,28 @@ void Sound::exit() {
 
 //--------------------------------------------------------------
 void Sound::audioOut(ofSoundBuffer& output) {
-	const float volume = 0.6f;
-	for (int i = 0; i < output.getNumFrames(); i++) {
-		output.getSample(i, 0) = 0;
-		output.getSample(i, 1) = 0;
+	auto& buffer = output.getBuffer();
+	if (buffer.empty()) return;
 
+	float* data = buffer.data();
+	int n = buffer.size();
+	// expected 2 channels
+	de_assert(output.getNumChannels() == 2, "Sound::audioOut - expected stereo buffer to fill");
+	int nframes = n / output.getNumChannels();
+
+	for (int i = 0; i < CH; i++) {
+		SYNTH[i].audio_add_stereo(data, nframes);
 	}
+
+	// Apply compression and final volume
+	float maxv = CH;
+	float Volume = UI_->value_to_float(UI_->Volume, FaderMax);
+	for (int k = 0; k < n; k++) {
+		float& v = data[k];
+		v *= 1.0f / CH;	// 0..1		//TODO this zero compression, make other
+		v *= Volume;
+	}
+
 }
 
 //--------------------------------------------------------------

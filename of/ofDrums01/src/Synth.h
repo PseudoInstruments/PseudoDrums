@@ -14,6 +14,7 @@ struct SynthSettings {
 class Synth {
 public:
 	void setup(int i, DeUI::UI *UI);
+	void audio_add_stereo(float* data, int nframes);
 
 protected:
 	int i_ = 0;

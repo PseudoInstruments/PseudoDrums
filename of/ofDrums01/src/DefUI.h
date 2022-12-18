@@ -38,17 +38,18 @@
 #define Y3 (Y2 + SYsmall)
 #define Y4 (Y3 + SYsmall)
 
-#define Marks (11)
+#define FaderMax (11)
 #define FaderR (30)
 
 #define PANELWIDTH (X3 + SXsmall + XVOL)
 #define PANELHEIGHT (PANELWIDTH*2/3)
 PANEL_SIZE(PANELWIDTH, PANELHEIGHT)
-FONT_DEF("fonts/verdana.ttf", Marks, ofColor(128), 4)
+FONT_DEF("fonts/verdana.ttf", FaderMax, ofColor(128), 4)
 
 // Variables
 #define N (4)
 VAR(Volume)
+VAR(Compress)
 VARARR(Vol, N)
 VARARR(SR, N)
 VARARR(Freq, N)
@@ -60,18 +61,19 @@ VARARR(Noise, N)
 VARARR(Pad, N)
 
 // UI
-FADER(Volume, Volume, "Vol", Marks, XVOL, Y0, FaderR)
+FADER(Volume, Volume, "Vol", FaderMax, XVOL, Y0, FaderR)
+FADER(Compress, Compress, "Compress", FaderMax, XVOL, Y1, FaderR)
 
 #define DRUM_BLOCK(I, X) \
 SCREEN(Scr##I, "", X-5, 40, SXsmall+10, 60)\
-FADER(Vol##I, Vol[I-1], "Vol", Marks, X, Y0, FaderR) \
-FADER(SR##I, SR[I-1], "SR", Marks, X+SXsmall, Y0, FaderR) \
-FADER(Freq##I, Freq[I-1], "Freq", Marks, X, Y1, FaderR) \
-FADER(FreqDelta##I, FreqDelta[I-1], "Delta", Marks, X + SXsmall, Y1, FaderR) \
-FADER(Duration##I, Duration[I-1], "Duration", Marks, X, Y2, FaderR) \
-FADER(Release##I, Release[I-1], "Release", Marks, X + SXsmall, Y2, FaderR) \
-FADER(Timbre##I, Timbre[I-1], "Timbre", Marks, X, Y3, FaderR) \
-FADER(Noise##I, Noise[I-1], "Noise", Marks, X + SXsmall, Y3, FaderR) \
+FADER(Vol##I, Vol[I-1], "Vol", FaderMax, X, Y0, FaderR) \
+FADER(SR##I, SR[I-1], "SR", FaderMax, X+SXsmall, Y0, FaderR) \
+FADER(Freq##I, Freq[I-1], "Freq", FaderMax, X, Y1, FaderR) \
+FADER(FreqDelta##I, FreqDelta[I-1], "Delta", FaderMax, X + SXsmall, Y1, FaderR) \
+FADER(Duration##I, Duration[I-1], "Duration", FaderMax, X, Y2, FaderR) \
+FADER(Release##I, Release[I-1], "Release", FaderMax, X + SXsmall, Y2, FaderR) \
+FADER(Timbre##I, Timbre[I-1], "Timbre", FaderMax, X, Y3, FaderR) \
+FADER(Noise##I, Noise[I-1], "Noise", FaderMax, X + SXsmall, Y3, FaderR) \
 BUTTON(Pad##I, Pad[I-1], "Pad " #I, '1'+I-1, X + SXsmall / 2, Y4, SXsmall, 30)
 
 DRUM_BLOCK(1, X0)
