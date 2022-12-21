@@ -1,5 +1,7 @@
 {
     "sr": 22050,
     "buffer_size": 128,
-	"num_buffers": 4
+	"num_buffers": 4,
+    "sample_rate_hz0": 260,
+	"sample_rate_hz1": 6000
 }

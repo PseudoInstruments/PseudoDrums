@@ -2,13 +2,27 @@
 
 #include "ofMain.h"
 #include "ofxDeSynthUI.h"
+#include "ofxSoundUtils.h"
+typedef ofxSoundUtils util;
+
 
 struct SynthSettings {
 	int sr = 22050;
 	int buffer_size = 128;
 	int num_buffers = 4;
+	float sample_rate_hz0 = 260;
+	float sample_rate_hz1 = 6000;
+
 	void setup();
 	void load_json();
+
+	// Sample rates
+	// Make table of sample rates
+	void init_sample_rates();
+
+	//Table of sample rates
+	static const int sample_rates_n = FaderMax;
+	int sample_rates[sample_rates_n];
 };
 
 class Synth {
@@ -30,6 +44,7 @@ protected:
 	int* Noise = nullptr;
 	int* Pad = nullptr;
 
+	void init_wave();
 };
 
 extern SynthSettings SETTINGS;
