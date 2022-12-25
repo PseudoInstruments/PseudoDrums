@@ -10,15 +10,11 @@ struct SynthSettings {
 	int sr = 22050;
 	int buffer_size = 128;
 	int num_buffers = 4;
-	float sample_rate_hz0 = 260;
-	float sample_rate_hz1 = 6000;
+	float sample_rate_note0 = 60;   //60 -> 261.63 Hz
+	float sample_rate_note1 = 114;  //114 -> 5919.91 Hz
 
 	void setup();
 	void load_json();
-
-	// Sample rates
-	// Make table of sample rates
-	void init_sample_rates();
 
 	//Table of sample rates
 	static const int sample_rates_n = FaderMax;
@@ -44,7 +40,14 @@ protected:
 	int* Noise = nullptr;
 	int* Pad = nullptr;
 
+	int pot_min = 0;
+	int pot_max = 10;
+
 	void init_wave();
+	
+	int sample_rate_ = 1;
+	int wave_n_ = 0;
+	vector<unsigned char> wavebuf_;
 };
 
 extern SynthSettings SETTINGS;

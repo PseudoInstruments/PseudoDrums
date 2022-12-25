@@ -76,7 +76,7 @@ void Sound::audioOut(ofSoundBuffer& output) {
 	float Volume = UI_->value_to_float(UI_->Volume, FaderMax);
 	for (int k = 0; k < n; k++) {
 		float& v = data[k];
-		v *= 1.0f / CH;	// 0..1		//TODO this zero compression, make other
+		v *= 1.0f / CH;	// 0..1		//TODO make compression
 		v *= Volume;
 	}
 
