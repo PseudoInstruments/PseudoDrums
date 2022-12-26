@@ -59,6 +59,16 @@ void Synth::setup(int id, DeUI::UI* UI) {
 
 //--------------------------------------------------------------
 void Synth::update() {
+	if (SR->changed()
+		|| Freq->changed()
+		|| FreqDelta->changed()
+		|| Duration->changed()
+		|| Release->changed()
+		|| Timbre->changed()
+		|| Noise->changed()) {
+		init_wave();
+	}
+
 	if (Pad->changed() && Pad->value) {
 		play_wave();
 	}
@@ -74,9 +84,10 @@ void Synth::init_wave() {
 	const float square_delta = square_note1 - square_note0;
 
 	float note0 = util::mapf_clamp(Freq->value, pot_min, pot_max, square_note0, square_note1);
-	float note1 = util::clampf(note0 + util::mapf(FreqDelta->value,
-		pot_min, pot_max, -square_delta, +square_delta),
-		square_note0, square_note1);
+	float note1 = //util::clampf(
+		note0 + util::mapf(FreqDelta->value,
+			pot_min, pot_max, -square_delta, +square_delta);
+		//,square_note0, square_note1);
 
 	// noise, 0 - tone, 127 - noise
 	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max, 0, 127);
@@ -140,6 +151,7 @@ void Synth::play_wave()
 void Synth::audio_add_stereo(float* data, int nframes) {
 	if (playing_) {
 		int sr_external = SETTINGS.sr;
+		
 		int k = 0;
 		for (int i = 0; i < nframes; i++) {
 			int pos_internal = (long long)sample_rate_ * play_pos_external_ / sr_external;
