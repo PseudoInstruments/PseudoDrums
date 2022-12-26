@@ -26,6 +26,7 @@ struct SynthSettings {
 class Synth {
 public:
 	void setup(int id, DeUI::UI *UI);
+	void update();
 	void audio_add_stereo(float* data, int nframes);
 	void init_wave();
 
@@ -35,15 +36,15 @@ protected:
 	int id_ = 0;
 	DeUI::UI* UI_ = nullptr;
 
-	int* Vol = nullptr;
-	int* SR = nullptr;
-	int* Freq = nullptr;
-	int* FreqDelta = nullptr;
-	int* Duration = nullptr;
-	int* Release = nullptr;
-	int* Timbre = nullptr;
-	int* Noise = nullptr;
-	int* Pad = nullptr;
+	DeUI::ValueInt* Vol = nullptr;
+	DeUI::ValueInt* SR = nullptr;
+	DeUI::ValueInt* Freq = nullptr;
+	DeUI::ValueInt* FreqDelta = nullptr;
+	DeUI::ValueInt* Duration = nullptr;
+	DeUI::ValueInt* Release = nullptr;
+	DeUI::ValueInt* Timbre = nullptr;
+	DeUI::ValueInt* Noise = nullptr;
+	DeUI::ValueInt* Pad = nullptr;
 
 	int pot_min = 0;
 	int pot_max = 10;
@@ -51,6 +52,9 @@ protected:
 	int sample_rate_ = 1;
 	int wave_n_ = 0;
 	vector<unsigned char> wavebuf_;
+
+	int playing_ = 0;
+	int play_pos_external_ = 0;
 
 };
 

@@ -58,25 +58,32 @@ void Synth::setup(int id, DeUI::UI* UI) {
 }
 
 //--------------------------------------------------------------
+void Synth::update() {
+	if (Pad->changed() && Pad->value) {
+		play_wave();
+	}
+}
+
+//--------------------------------------------------------------
 void Synth::init_wave() {
-	int duration_ms = util::mapi_clamp(*Duration, pot_min, pot_max, 
+	int duration_ms = util::mapi_clamp(Duration->value, pot_min, pot_max, 
 		SETTINGS.duration_ms0, SETTINGS.duration_ms1);
 
 	const float square_note0 = 34;   //34 -> 58 Hz
 	const float square_note1 = 84;  //84 -> 1046,  72 -> 523 Hz
 	const float square_delta = square_note1 - square_note0;
 
-	float note0 = util::mapf_clamp(*Freq, pot_min, pot_max, square_note0, square_note1);
-	float note1 = util::clampf(note0 + util::mapf(*FreqDelta,
+	float note0 = util::mapf_clamp(Freq->value, pot_min, pot_max, square_note0, square_note1);
+	float note1 = util::clampf(note0 + util::mapf(FreqDelta->value,
 		pot_min, pot_max, -square_delta, +square_delta),
 		square_note0, square_note1);
 
 	// noise, 0 - tone, 127 - noise
-	int timbre_noise = util::mapi_clamp(*Noise, pot_min, pot_max, 0, 127);
+	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max, 0, 127);
 	int timbre_tone = 127 - timbre_noise;
 
 	// sample rate
-	float sample_rate_note = util::mapf(*SR, pot_min, pot_max, SETTINGS.sample_rate_note0, SETTINGS.sample_rate_note1);
+	float sample_rate_note = util::mapf(SR->value, pot_min, pot_max, SETTINGS.sample_rate_note0, SETTINGS.sample_rate_note1);
 	sample_rate_ = util::note_to_hz_float(sample_rate_note);
 
 	wave_n_ = (long long)(sample_rate_)*duration_ms / 1000;
@@ -124,12 +131,28 @@ void Synth::init_wave() {
 //--------------------------------------------------------------
 void Synth::play_wave()
 {
+	playing_ = 1;
+	play_pos_external_ = 0;
 
 }
 
 //--------------------------------------------------------------
 void Synth::audio_add_stereo(float* data, int nframes) {
-
+	if (playing_) {
+		int sr_external = SETTINGS.sr;
+		int k = 0;
+		for (int i = 0; i < nframes; i++) {
+			int pos_internal = (long long)sample_rate_ * play_pos_external_ / sr_external;
+			if (pos_internal >= wave_n_) {
+				playing_ = 0;
+				break;
+			}
+			float v = wavebuf_[pos_internal];
+			data[k++] = v;
+			data[k++] = v;
+			play_pos_external_++;
+		}
+	}
 }
 
 //--------------------------------------------------------------

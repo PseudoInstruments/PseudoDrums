@@ -81,7 +81,7 @@ void Sound::audioOut(ofSoundBuffer& output) {
 
 	// Apply compression and final volume
 	float maxv = CH;
-	float Volume = UI_->value_to_float(UI_->Volume, FaderMax);
+	float Volume = UI_->value_to_float(UI_->Volume.value, FaderMax);
 	for (int k = 0; k < n; k++) {
 		float& v = data[k];
 		v *= 1.0f / CH;	// 0..1		//TODO make compression
@@ -92,7 +92,9 @@ void Sound::audioOut(ofSoundBuffer& output) {
 
 //--------------------------------------------------------------
 void Sound::update() {
-
+	for (int i = 0; i < CH; i++) {
+		SYNTH[i].update();
+	}
 
 }
 

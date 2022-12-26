@@ -2,9 +2,7 @@
 
 // Empty definitions
 #ifndef VAR
-#define VAR_WRITEONLY(V)
 #define VAR(V)
-#define VARARR_WRITEONLY(V,COUNT)
 #define VARARR(V,COUNT)
 #endif
 
@@ -84,9 +82,7 @@ DRUM_BLOCK(3, X2)
 DRUM_BLOCK(4, X3)
 
 // Clear definitions
-#undef VAR_WRITEONLY
 #undef VAR
-#undef VARARR_WRITEONLY
 #undef VARARR
 
 #undef FADER
