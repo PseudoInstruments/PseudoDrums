@@ -148,6 +148,16 @@ void Synth::play_wave()
 }
 
 //--------------------------------------------------------------
+void Synth::render_to_image(unsigned char* image_grayscale, int w, int h)
+{
+	int k = 0;
+	for (int k = 0; k < w*h; k++) {
+		int i = (long long)(k * wave_n_ / (w * h));
+		image_grayscale[k] = (wavebuf_[i] > 0) ? 255 : 0;
+	}
+}
+
+//--------------------------------------------------------------
 void Synth::audio_add_stereo(float* data, int nframes) {
 	if (playing_) {
 		int sr_external = SETTINGS.sr;
@@ -160,8 +170,8 @@ void Synth::audio_add_stereo(float* data, int nframes) {
 				break;
 			}
 			float v = wavebuf_[pos_internal];
-			data[k++] = v;
-			data[k++] = v;
+			data[k++] += v;
+			data[k++] += v;
 			play_pos_external_++;
 		}
 	}

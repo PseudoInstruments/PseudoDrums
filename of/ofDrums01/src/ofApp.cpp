@@ -6,10 +6,14 @@
 DeUI::UI* UI = nullptr;
 //--------------------------------------------------------------
 void ofApp::setup(){
-	int W = 1080;
-	int H = W * 2 / 3;
-	ofSetWindowShape(1080, H);
+	cout << "ofDrums" << endl;
+
+	int H = 900;
+	int W = H * PANELWIDTH / PANELHEIGHT;
+	ofSetWindowShape(W, H);
 	ofSetFrameRate(60);
+
+	cout << "Panel relative size " << PANELWIDTH << "x" << PANELHEIGHT << endl;
 
 	UI = new DeUI::UI();
 	UI->setup();

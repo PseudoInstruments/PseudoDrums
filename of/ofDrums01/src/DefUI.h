@@ -20,31 +20,32 @@
 #endif
 
 // Layout settings
-#define SXsmall (70)
-#define SXlarge (100)
-#define SYtiny (40)
-#define SYsmall (70)
-#define SYlarge (100)
+#define SYsmall (250)
+#define SYlarge (350)
 
-#define XVOL (SXsmall)
-#define X0 (XVOL + SXsmall)
-#define X1 (X0 + SXsmall + SXlarge)
-#define X2 (X1 + SXsmall + SXlarge)
-#define X3 (X2 + SXsmall + SXlarge)
+#define XVOL (200)
+#define X0 (400)
+#define X1 (800)
+#define X2 (1200)
+#define X3 (1600)
 
-#define Y0 (180)
+#define Y0 (700)
 #define Y1 (Y0 + SYsmall)
 #define Y2 (Y1 + SYsmall)
 #define Y3 (Y2 + SYsmall)
 #define Y4 (Y3 + SYsmall)
+#define Y5 (Y4 + SYsmall)
+#define Y6 (Y5 + SYsmall)
+#define Y7 (Y6 + SYsmall)
+#define Y8 (Y7 + SYsmall)
 
 #define FaderMax (11)
-#define FaderR (30)
+#define FaderR (100)
 
-#define PANELWIDTH (X3 + SXsmall + XVOL)
-#define PANELHEIGHT (PANELWIDTH*2/3)
+#define PANELWIDTH (2000)
+#define PANELHEIGHT (3000)
 PANEL_SIZE(PANELWIDTH, PANELHEIGHT)
-FONT_DEF("fonts/verdana.ttf", FaderMax, ofColor(128), 4)
+FONT_DEF("fonts/verdana.ttf", 50, ofColor(128), 4)
 
 // Variables
 #define N (4)
@@ -64,17 +65,20 @@ VARARR(Pad, N)
 FADER(Volume, Volume, "Vol", FaderMax, XVOL, Y0, FaderR)
 FADER(Compress, Compress, "Compress", FaderMax, XVOL, Y1, FaderR)
 
+#define SCRW
+SCREEN(Scr1, "", 200, 200, 700, 350)
+SCREEN(Scr2, "", 1100, 200, 700, 350)
+
 #define DRUM_BLOCK(I, X) \
-SCREEN(Scr##I, "", X-5, 40, SXsmall+10, 60) \
 FADER(Vol##I, Vol[I-1], "Vol", FaderMax, X, Y0, FaderR) \
-FADER(SR##I, SR[I-1], "SR", FaderMax, X+SXsmall, Y0, FaderR) \
-FADER(Freq##I, Freq[I-1], "Freq", FaderMax, X, Y1, FaderR) \
-FADER(FreqDelta##I, FreqDelta[I-1], "Delta", FaderMax, X + SXsmall, Y1, FaderR) \
-FADER(Duration##I, Duration[I-1], "Duration", FaderMax, X, Y2, FaderR) \
-FADER(Release##I, Release[I-1], "Release", FaderMax, X + SXsmall, Y2, FaderR) \
-FADER(Timbre##I, Timbre[I-1], "Timbre", FaderMax, X, Y3, FaderR) \
-FADER(Noise##I, Noise[I-1], "Noise", FaderMax, X + SXsmall, Y3, FaderR) \
-BUTTON(Pad##I, Pad[I-1], "Pad " #I, '1'+I-1, X + SXsmall / 2, Y4, SXsmall, FaderR)
+FADER(SR##I, SR[I-1], "SR", FaderMax, X, Y1, FaderR) \
+FADER(Freq##I, Freq[I-1], "Freq", FaderMax, X, Y2, FaderR) \
+FADER(FreqDelta##I, FreqDelta[I-1], "Delta", FaderMax, X, Y3, FaderR) \
+FADER(Duration##I, Duration[I-1], "Duration", FaderMax, X, Y4, FaderR) \
+FADER(Release##I, Release[I-1], "Release", FaderMax, X, Y5, FaderR) \
+FADER(Timbre##I, Timbre[I-1], "Timbre", FaderMax, X, Y6, FaderR) \
+FADER(Noise##I, Noise[I-1], "Noise", FaderMax, X, Y7, FaderR) \
+BUTTON(Pad##I, Pad[I-1], "Pad " #I, '1'+I-1, X, Y8, FaderR*2, FaderR*1.5)
 
 DRUM_BLOCK(1, X0)
 DRUM_BLOCK(2, X1)

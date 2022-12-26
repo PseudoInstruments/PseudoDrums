@@ -32,6 +32,8 @@ public:
 
 	void play_wave();
 
+	void render_to_image(unsigned char* image_grayscale, int w, int h);
+
 protected:
 	int id_ = 0;
 	DeUI::UI* UI_ = nullptr;
