@@ -29,6 +29,8 @@ void ofApp::exit() {
 void ofApp::update(){
 	UI->update();
 	//UI->LED1 = UI->PAD1;
+
+
 }
 
 //--------------------------------------------------------------
@@ -43,6 +45,10 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+	if (key == ' ') {
+		Sound::sound()->init_waves();
+		return;
+	}
 	UI->keyPressed(key);
 }
 

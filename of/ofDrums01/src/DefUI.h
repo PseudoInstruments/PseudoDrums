@@ -2,7 +2,9 @@
 
 // Empty definitions
 #ifndef VAR
+#define VAR_WRITEONLY(V)
 #define VAR(V)
+#define VARARR_WRITEONLY(V,COUNT)
 #define VARARR(V,COUNT)
 #endif
 
@@ -65,7 +67,7 @@ FADER(Volume, Volume, "Vol", FaderMax, XVOL, Y0, FaderR)
 FADER(Compress, Compress, "Compress", FaderMax, XVOL, Y1, FaderR)
 
 #define DRUM_BLOCK(I, X) \
-SCREEN(Scr##I, "", X-5, 40, SXsmall+10, 60)\
+SCREEN(Scr##I, "", X-5, 40, SXsmall+10, 60) \
 FADER(Vol##I, Vol[I-1], "Vol", FaderMax, X, Y0, FaderR) \
 FADER(SR##I, SR[I-1], "SR", FaderMax, X+SXsmall, Y0, FaderR) \
 FADER(Freq##I, Freq[I-1], "Freq", FaderMax, X, Y1, FaderR) \
@@ -74,7 +76,7 @@ FADER(Duration##I, Duration[I-1], "Duration", FaderMax, X, Y2, FaderR) \
 FADER(Release##I, Release[I-1], "Release", FaderMax, X + SXsmall, Y2, FaderR) \
 FADER(Timbre##I, Timbre[I-1], "Timbre", FaderMax, X, Y3, FaderR) \
 FADER(Noise##I, Noise[I-1], "Noise", FaderMax, X + SXsmall, Y3, FaderR) \
-BUTTON(Pad##I, Pad[I-1], "Pad " #I, '1'+I-1, X + SXsmall / 2, Y4, SXsmall, 30)
+BUTTON(Pad##I, Pad[I-1], "Pad " #I, '1'+I-1, X + SXsmall / 2, Y4, SXsmall, FaderR)
 
 DRUM_BLOCK(1, X0)
 DRUM_BLOCK(2, X1)
@@ -82,7 +84,9 @@ DRUM_BLOCK(3, X2)
 DRUM_BLOCK(4, X3)
 
 // Clear definitions
+#undef VAR_WRITEONLY
 #undef VAR
+#undef VARARR_WRITEONLY
 #undef VARARR
 
 #undef FADER

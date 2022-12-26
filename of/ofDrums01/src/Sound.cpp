@@ -57,6 +57,14 @@ void Sound::exit() {
 }
 
 //--------------------------------------------------------------
+void Sound::init_waves()
+{
+	for (int i = 0; i < CH; i++) {
+		SYNTH[i].init_wave();
+	}
+}
+
+//--------------------------------------------------------------
 void Sound::audioOut(ofSoundBuffer& output) {
 	auto& buffer = output.getBuffer();
 	if (buffer.empty()) return;

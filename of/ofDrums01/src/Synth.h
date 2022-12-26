@@ -13,21 +13,26 @@ struct SynthSettings {
 	float sample_rate_note0 = 60;   //60 -> 261.63 Hz
 	float sample_rate_note1 = 114;  //114 -> 5919.91 Hz
 
+	int duration_ms0 = 10;
+	int duration_ms1 = 500;
+
+
+	int max_samples() const;
+
 	void setup();
 	void load_json();
-
-	//Table of sample rates
-	static const int sample_rates_n = FaderMax;
-	int sample_rates[sample_rates_n];
 };
 
 class Synth {
 public:
-	void setup(int i, DeUI::UI *UI);
+	void setup(int id, DeUI::UI *UI);
 	void audio_add_stereo(float* data, int nframes);
+	void init_wave();
+
+	void play_wave();
 
 protected:
-	int i_ = 0;
+	int id_ = 0;
 	DeUI::UI* UI_ = nullptr;
 
 	int* Vol = nullptr;
@@ -42,12 +47,11 @@ protected:
 
 	int pot_min = 0;
 	int pot_max = 10;
-
-	void init_wave();
 	
 	int sample_rate_ = 1;
 	int wave_n_ = 0;
 	vector<unsigned char> wavebuf_;
+
 };
 
 extern SynthSettings SETTINGS;

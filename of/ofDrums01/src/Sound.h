@@ -14,6 +14,8 @@ public:
 
 	void audioOut(ofSoundBuffer& output);
 
+	void init_waves();
+
 protected:
 	DeUI::UI* UI_ = nullptr;
 	ofSoundStream sound_stream_;
