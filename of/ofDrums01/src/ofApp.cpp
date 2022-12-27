@@ -20,6 +20,9 @@ void ofApp::setup(){
 	UI->load_json();
 
 	Sound::create(UI);
+
+	screen_[0].resize(SCREEN_PX_W * SCREEN_PX_H);
+	screen_[1].resize(SCREEN_PX_W * SCREEN_PX_H);
 }
 
 //--------------------------------------------------------------
@@ -35,6 +38,25 @@ void ofApp::update(){
 	Sound::sound()->update();
 	//UI->LED1 = UI->PAD1;
 	UI->store_last_values();
+
+	int scrw = SCREEN_PX_W;
+	int scrh = SCREEN_PX_H;
+
+	// Update screens
+	for (int i = 0; i < 2; i++) {
+		bool changed = false;
+		for (int k = 0; k < 2; k++) {
+			if (SYNTH[i * 2 + k].is_changed()) {
+				SYNTH[i * 2 + k].render_to_image(screen_[i].data(), scrw, scrh,
+					k * scrw / 2, 0, scrw / 2, scrh);
+				changed = true;
+			}
+		}
+		if (changed) {
+			if (i == 0) UI->uiScr1->set_image_grayscale(screen_[0].data(), scrw, scrh);
+			if (i == 1) UI->uiScr2->set_image_grayscale(screen_[1].data(), scrw, scrh);
+		}
+	}
 }
 
 //--------------------------------------------------------------

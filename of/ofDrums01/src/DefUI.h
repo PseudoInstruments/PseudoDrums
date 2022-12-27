@@ -19,7 +19,25 @@
 #define FONT_DEF(FontFile, FontSize, FontColor, ShiftY)
 #endif
 
-// Layout settings
+//------------------------------------------------------
+// UI size, font, and other main values
+//------------------------------------------------------
+#define PANELWIDTH (2000)
+#define PANELHEIGHT (3000)
+PANEL_SIZE(PANELWIDTH, PANELHEIGHT)
+FONT_DEF("fonts/verdana.ttf", 50, ofColor(128), 4)
+
+// Screen size in pixels
+#define SCREEN_PX_W 128
+#define SCREEN_PX_H 64
+
+// Number of Fader values
+#define FaderMax (11)
+
+
+//------------------------------------------------------
+// Layout coordinates
+//------------------------------------------------------
 #define SYsmall (250)
 #define SYlarge (350)
 
@@ -39,15 +57,11 @@
 #define Y7 (Y6 + SYsmall)
 #define Y8 (Y7 + SYsmall)
 
-#define FaderMax (11)
 #define FaderR (100)
 
-#define PANELWIDTH (2000)
-#define PANELHEIGHT (3000)
-PANEL_SIZE(PANELWIDTH, PANELHEIGHT)
-FONT_DEF("fonts/verdana.ttf", 50, ofColor(128), 4)
-
+//------------------------------------------------------
 // Variables
+//------------------------------------------------------
 #define N (4)
 VAR(Volume)
 VAR(Compress)
@@ -61,11 +75,12 @@ VARARR(Timbre, N)
 VARARR(Noise, N)
 VARARR(Pad, N)
 
+//--------------------------------------------
 // UI
+//--------------------------------------------
 FADER(Volume, Volume, "Vol", FaderMax, XVOL, Y0, FaderR)
 FADER(Compress, Compress, "Compress", FaderMax, XVOL, Y1, FaderR)
 
-#define SCRW
 SCREEN(Scr1, "", 200, 200, 700, 350)
 SCREEN(Scr2, "", 1100, 200, 700, 350)
 

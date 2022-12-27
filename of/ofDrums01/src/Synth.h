@@ -32,7 +32,9 @@ public:
 
 	void play_wave();
 
-	void render_to_image(unsigned char* image_grayscale, int w, int h);
+	bool is_changed();
+	void render_to_image(unsigned char* image_grayscale, int w, int h, 
+		int x0, int y0, int w0, int h0);
 
 protected:
 	int id_ = 0;
@@ -57,6 +59,8 @@ protected:
 
 	int playing_ = 0;
 	int play_pos_external_ = 0;
+
+	bool is_changed_ = false;
 
 };
 
