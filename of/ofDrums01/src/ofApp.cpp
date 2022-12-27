@@ -8,6 +8,8 @@ DeUI::UI* UI = nullptr;
 void ofApp::setup(){
 	cout << "ofDrums" << endl;
 
+	SETTINGS.setup();
+
 	int H = 900;
 	int W = H * PANELWIDTH / PANELHEIGHT;
 	ofSetWindowShape(W, H);
@@ -23,10 +25,14 @@ void ofApp::setup(){
 
 	screen_[0].resize(SCREEN_PX_W * SCREEN_PX_H);
 	screen_[1].resize(SCREEN_PX_W * SCREEN_PX_H);
+
+	control_thread_.start(UI, SETTINGS.control_rate);
 }
 
 //--------------------------------------------------------------
 void ofApp::exit() {
+	control_thread_.stop();
+
 	UI->save_json();
 	delete UI;
 	UI = nullptr;
@@ -34,10 +40,7 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	UI->update();
-	Sound::sound()->update();
-	//UI->LED1 = UI->PAD1;
-	UI->store_last_values();
+	// Note: UI and Sound updates performed at ControlThread
 
 	int scrw = SCREEN_PX_W;
 	int scrh = SCREEN_PX_H;
@@ -75,7 +78,8 @@ void ofApp::keyPressed(int key){
 		Sound::sound()->init_waves();
 		return;
 	}
-	UI->keyPressed(key);
+	// UI keypresses are sent from ControlThread 
+	// Connented: UI->keyPressed(key);
 }
 
 //--------------------------------------------------------------

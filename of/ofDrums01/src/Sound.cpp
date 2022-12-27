@@ -19,7 +19,6 @@ Sound* Sound::sound() {
 //--------------------------------------------------------------
 void Sound::setup(DeUI::UI* UI) {
 	UI_ = UI;
-	SETTINGS.setup();
 	for (int i = 0; i < CH; i++) {
 		SYNTH[i].setup(i, UI);
 	}
