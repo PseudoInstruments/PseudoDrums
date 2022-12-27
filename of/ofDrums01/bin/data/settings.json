@@ -1,4 +1,5 @@
 {
+    "control_rate": 100,
     "sr": 22050,
     "buffer_size": 128,
 	"num_buffers": 4,

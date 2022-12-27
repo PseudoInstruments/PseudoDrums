@@ -7,6 +7,8 @@ typedef ofxSoundUtils util;
 
 
 struct SynthSettings {
+	int control_rate = 100;
+
 	int sr = 22050;
 	int buffer_size = 128;
 	int num_buffers = 4;
@@ -15,7 +17,6 @@ struct SynthSettings {
 
 	int duration_ms0 = 10;
 	int duration_ms1 = 500;
-
 
 	int max_samples() const;
 

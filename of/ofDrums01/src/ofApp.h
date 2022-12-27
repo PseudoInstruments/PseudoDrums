@@ -4,6 +4,7 @@
 //To check it, run Notepad.
 
 #include "ofMain.h"
+#include "ControlThread.h"
 
 class ofApp : public ofBaseApp {
 public:
@@ -25,5 +26,6 @@ public:
 	void gotMessage(ofMessage msg);
 
 	vector<unsigned char> screen_[2];
+	ControlThread control_thread_;
 
 };

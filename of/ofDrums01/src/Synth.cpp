@@ -13,8 +13,9 @@ void SynthSettings::setup() {
 void SynthSettings::load_json() {
 	ofJson json = ofLoadJson("settings.json");
 
-	sr = json["sr"];
 #define LOADVAL(NAME) NAME = json[#NAME]
+	LOADVAL(control_rate);
+	LOADVAL(sr);
 	LOADVAL(buffer_size);
 	LOADVAL(num_buffers);
 	LOADVAL(sample_rate_note0);
