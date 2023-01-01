@@ -34,7 +34,14 @@ void Sound::setup_sound_stream()
 	cout << devices << endl;
 	de_assert(!devices.empty(), "No sound devices");
 
+	// Api: 
+	// DEFAULT
+	// MS_WASAPI /*!< The Microsoft WASAPI API. */
+	// MS_ASIO   /*!< The Steinberg Audio Stream I/O API. */
+	// MS_DS     /*!< The Microsoft Direct Sound API. */
+
 	ofSoundStreamSettings settings;
+	settings.setApi(ofSoundDevice::Api::MS_WASAPI);
 	//settings.setInDevice(devices[0]);
 	settings.setOutDevice(devices[0]);
 

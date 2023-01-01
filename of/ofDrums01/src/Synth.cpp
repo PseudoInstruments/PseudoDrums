@@ -60,7 +60,8 @@ void Synth::setup(int id, DeUI::UI* UI) {
 
 //--------------------------------------------------------------
 void Synth::update() {
-	if (SR->changed()
+	if (Vol->changed()
+		|| SR->changed()
 		|| Freq->changed()
 		|| FreqDelta->changed()
 		|| Duration->changed()
@@ -77,9 +78,17 @@ void Synth::update() {
 
 //--------------------------------------------------------------
 void Synth::init_wave() {
+	// Duration and sample rate
 	int duration_ms = util::mapi_clamp(Duration->value, pot_min, pot_max,
 		SETTINGS.duration_ms0, SETTINGS.duration_ms1);
 
+	float sample_rate_note = util::mapf(SR->value, pot_min, pot_max, 
+		SETTINGS.sample_rate_note0, SETTINGS.sample_rate_note1);
+	sample_rate_ = util::note_to_hz_float(sample_rate_note);
+
+	wave_n_ = (long long)(sample_rate_)*duration_ms / 1000;
+
+	// Frequency
 	const float square_note0 = 34;   //34 -> 58 Hz
 	const float square_note1 = 84;  //84 -> 1046,  72 -> 523 Hz
 	const float square_delta = square_note1 - square_note0;
@@ -88,35 +97,58 @@ void Synth::init_wave() {
 	float note1 = //util::clampf(
 		note0 + util::mapf(FreqDelta->value,
 			pot_min, pot_max, -square_delta, +square_delta);
-	//,square_note0, square_note1);
 
-// noise, 0 - tone, 127 - noise
-	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max, 0, 127);
-	int timbre_tone = 127 - timbre_noise;
+	// Noise, 0 - tone, 127 - noise
+	const int noise_max = 127;
+	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max, 
+		0, noise_max);
+	int timbre_tone = noise_max - timbre_noise;
 
-	// sample rate
-	float sample_rate_note = util::mapf(SR->value, pot_min, pot_max, SETTINGS.sample_rate_note0, SETTINGS.sample_rate_note1);
-	sample_rate_ = util::note_to_hz_float(sample_rate_note);
+	// Volume and release
+	const float db0 = -40;
+	const float db1 = 0;
+	float vol_db = util::mapf(Vol->value, pot_min, pot_max, db0, db1);
 
-	wave_n_ = (long long)(sample_rate_)*duration_ms / 1000;
+	int release_start_n = util::mapi(Release->value, pot_min, pot_max,
+		wave_n_, 0);
 
+	// Rendering sound
 	//float phase = 0;
 	//float phase_adder;    //period 1 - <0.5->0, >=0.5->1
 	int phase = 0;
 	int phase_adder;    //period sample_rate_: 0..sample_rate/2 -> 0, else -> 1
 	int sample_rate2 = sample_rate_ / 2;
 
+	int Sound;
 	for (int i = 0; i < wave_n_; i++) {
+		// Frequency
 		float ton = util::mapf(i, 0, wave_n_ - 1, note0, note1);
 		int freq = util::note_to_hz_int(ton);
 		//phase_adder = float(freq) / sample_rate_;
 		phase_adder = freq;
 
-		int sound = timbre_tone * ((phase < sample_rate2) ? -1 : 1)
-			+ util::randomi(-timbre_noise, timbre_noise);
-		wavebuf_[i] = (sound > 0) ? 1 : 0;
+		Sound = timbre_tone * ((phase < sample_rate2) ? -1 : 1);
 		phase += phase_adder;
 		phase %= sample_rate_;
+
+		// Noise
+		Sound += util::randomi(-timbre_noise, timbre_noise);
+		
+		Sound = (Sound > 0) ? 1 : -1; //0;   //Sound -1 | 1
+		
+		// Volume and release
+		float vol_db_momentary = util::mapf_clamp(i, release_start_n, wave_n_,
+			vol_db, 0);
+		const int vol0 = 0;
+		const int vol1 = 127;
+
+		int volume = util::mapf(util::db_to_amp(vol_db_momentary),
+		util::db_to_amp(db0), util::db_to_amp(db1), 
+		vol0, vol1);
+
+		Sound *= volume;	// Sound -127..127
+
+		wavebuf_[i] = Sound; 
 	}
 
 	is_changed_ = true;
@@ -172,7 +204,7 @@ void Synth::audio_add_stereo(float* data, int nframes) {
 				playing_ = 0;
 				break;
 			}
-			float v = wavebuf_[pos_internal];
+			float v = wavebuf_[pos_internal] / 127.f;	// Convert to -1..1
 			data[k++] += v;
 			data[k++] += v;
 			play_pos_external_++;
