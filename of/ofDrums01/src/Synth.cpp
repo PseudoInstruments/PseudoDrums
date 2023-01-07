@@ -104,9 +104,7 @@ void Synth::init_wave() {
 	int timbre_tone = noise_max - timbre_noise;
 
 	// Volume and release
-	const float db0 = -40;
-	const float db1 = 0;
-	float vol_db = util::mapf(Vol->value, pot_min, pot_max, db0, db1);
+	float vol_db = util::mapf(Vol->value, pot_min, pot_max, SETTINGS.db0, SETTINGS.db1);
 
 	int release_start_n = util::mapi(Release->value, pot_min, pot_max,
 		wave_n_, 0);
@@ -137,13 +135,11 @@ void Synth::init_wave() {
 
 		// Volume and release
 		float vol_db_momentary = util::mapf_clamp(i, release_start_n, wave_n_,
-			vol_db, db0);
-		const int vol0 = 0;
-		const int vol1 = 127;
+			vol_db, SETTINGS.db0);
 
 		int volume = int(util::mapf(util::db_to_amp(vol_db_momentary),
-			util::db_to_amp(db0), util::db_to_amp(db1),
-			vol0, vol1));
+			util::db_to_amp(SETTINGS.db0), util::db_to_amp(SETTINGS.db1),
+			SETTINGS.vol0, SETTINGS.vol1));
 
 		Sound *= volume;	// Sound -127..127
 
@@ -177,9 +173,17 @@ void Synth::play_wave()
 }
 
 //--------------------------------------------------------------
-void Synth::render_to_image(unsigned char* image_grayscale, int w, int h,
-	int x0, int y0, int w0, int h0)
+void Synth::render_to_image(unsigned char* image_grayscale, int wraw, int hraw,
+	int x0raw, int y0raw, int w0raw, int h0raw)
 {
+	const int pixsize = 2;
+	int w = wraw / pixsize;
+	int h = hraw / pixsize;
+	int x0 = x0raw / pixsize;
+	int y0 = y0raw / pixsize;
+	int w0 = w0raw / pixsize;
+	int h0 = h0raw / pixsize;
+
 	int n0 = w0 * h0;
 	int k = 0;
 	for (int y = 0; y < h0; y++) {
@@ -187,7 +191,21 @@ void Synth::render_to_image(unsigned char* image_grayscale, int w, int h,
 			int i = (long long)(k * wave_n_ / n0);
 			k++;
 			int v = wavebuf_[i];  // -127..127
-			image_grayscale[x0 + x + w * (y0 + y)] = (v > 0) ? v*2 : 0;
+			v = (v > 0) ? v * 2 : 0;	// 0..254
+
+			// Drawpixel as pixsize x pixsize
+			int colors[4] = {
+				v > 0 ? 255 : 0, v > 128 ? 255 : 0,
+				v > 196 ? 255 : 0, v > 64 ? 255 : 0
+			};
+			int xraw = x0raw + x * pixsize;
+			int yraw = y0raw + y * pixsize;
+			int k = 0;
+			for (int b = 0; b < pixsize; b++) {
+				for (int a = 0; a < pixsize; a++) {
+					image_grayscale[xraw + a + wraw * (yraw + b)] = colors[k++];
+				}
+			}
 		}
 	}
 }

@@ -19,6 +19,11 @@ struct SynthSettings {
 	int duration_ms0 = 10;
 	int duration_ms1 = 500;
 
+	const float db0 = -40;
+	const float db1 = 0;
+	const int vol0 = 0;
+	const int vol1 = 127;
+
 	int max_samples() const;
 
 	void setup();
