@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "DeTypesAssert.h"
 #include "ofxDeSynthUI.h"
 #include "ofxSoundUtils.h"
 typedef ofxSoundUtils util;
@@ -56,7 +57,7 @@ protected:
 	
 	int sample_rate_ = 1;
 	int wave_n_ = 0;
-	vector<unsigned char> wavebuf_; // -128..127
+	vector<int8> wavebuf_; // -128..127
 
 	int playing_ = 0;
 	int play_pos_external_ = 0;

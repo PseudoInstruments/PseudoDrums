@@ -1,5 +1,4 @@
 #include "Synth.h"
-#include "DeTypesAssert.h"
 
 SynthSettings SETTINGS;
 Synth SYNTH[CH];
@@ -82,7 +81,7 @@ void Synth::init_wave() {
 	int duration_ms = util::mapi_clamp(Duration->value, pot_min, pot_max,
 		SETTINGS.duration_ms0, SETTINGS.duration_ms1);
 
-	float sample_rate_note = util::mapf(SR->value, pot_min, pot_max, 
+	float sample_rate_note = util::mapf(SR->value, pot_min, pot_max,
 		SETTINGS.sample_rate_note0, SETTINGS.sample_rate_note1);
 	sample_rate_ = util::note_to_hz_float(sample_rate_note);
 
@@ -100,7 +99,7 @@ void Synth::init_wave() {
 
 	// Noise, 0 - tone, 127 - noise
 	const int noise_max = 127;
-	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max, 
+	int timbre_noise = util::mapi_clamp(Noise->value, pot_min, pot_max,
 		0, noise_max);
 	int timbre_tone = noise_max - timbre_noise;
 
@@ -133,22 +132,22 @@ void Synth::init_wave() {
 
 		// Noise
 		Sound += util::randomi(-timbre_noise, timbre_noise);
-		
+
 		Sound = (Sound > 0) ? 1 : -1; //0;   //Sound -1 | 1
-		
+
 		// Volume and release
 		float vol_db_momentary = util::mapf_clamp(i, release_start_n, wave_n_,
-			vol_db, 0);
+			vol_db, db0);
 		const int vol0 = 0;
 		const int vol1 = 127;
 
-		int volume = util::mapf(util::db_to_amp(vol_db_momentary),
-		util::db_to_amp(db0), util::db_to_amp(db1), 
-		vol0, vol1);
+		int volume = int(util::mapf(util::db_to_amp(vol_db_momentary),
+			util::db_to_amp(db0), util::db_to_amp(db1),
+			vol0, vol1));
 
 		Sound *= volume;	// Sound -127..127
 
-		wavebuf_[i] = Sound; 
+		wavebuf_[i] = Sound;
 	}
 
 	is_changed_ = true;
@@ -187,7 +186,8 @@ void Synth::render_to_image(unsigned char* image_grayscale, int w, int h,
 		for (int x = 0; x < w0; x++) {
 			int i = (long long)(k * wave_n_ / n0);
 			k++;
-			image_grayscale[x0 + x + w * (y0 + y)] = (wavebuf_[i] > 0) ? 255 : 0;
+			int v = wavebuf_[i];  // -127..127
+			image_grayscale[x0 + x + w * (y0 + y)] = (v > 0) ? v*2 : 0;
 		}
 	}
 }
