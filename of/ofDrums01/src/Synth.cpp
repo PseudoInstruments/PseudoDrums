@@ -6,6 +6,7 @@ Synth SYNTH[CH];
 //--------------------------------------------------------------
 void SynthSettings::setup() {
 	load_json();
+	setup_sound_to_color();
 }
 
 //--------------------------------------------------------------
@@ -23,6 +24,29 @@ void SynthSettings::load_json() {
 	LOADVAL(duration_ms1);
 
 #undef LOADVAL
+}
+
+//--------------------------------------------------------------
+void SynthSettings::setup_sound_to_color()
+{
+	sound_to_color_.resize(256);
+	// fill -127..127 -> db 0..255
+	// for negative sound will return 0
+	for (int sound = 0; sound <= 127; sound++) {
+		float sndf = util::mapf(sound,
+			SETTINGS.vol0, SETTINGS.vol1,
+			SETTINGS.amp_from_db0, SETTINGS.amp_from_db1);
+
+		int v = int(util::mapf(util::amp_to_db(sndf),
+			SETTINGS.db0, SETTINGS.db1, 0, 255));
+
+		 sound_to_color_[sound + 128] = util::clampi(v, 0, 255);
+	}
+}
+
+//--------------------------------------------------------------
+uint8 SynthSettings::sound_to_color(int8 sound) {	// -127..127 -> db 0..255
+	return sound_to_color_[int(sound) + 128];
 }
 
 //--------------------------------------------------------------
@@ -138,7 +162,7 @@ void Synth::init_wave() {
 			vol_db, SETTINGS.db0);
 
 		int volume = int(util::mapf(util::db_to_amp(vol_db_momentary),
-			util::db_to_amp(SETTINGS.db0), util::db_to_amp(SETTINGS.db1),
+			SETTINGS.amp_from_db0, SETTINGS.amp_from_db1,
 			SETTINGS.vol0, SETTINGS.vol1));
 
 		Sound *= volume;	// Sound -127..127
@@ -191,7 +215,8 @@ void Synth::render_to_image(unsigned char* image_grayscale, int wraw, int hraw,
 			int i = (long long)(k * wave_n_ / n0);
 			k++;
 			int v = wavebuf_[i];  // -127..127
-			v = (v > 0) ? v * 2 : 0;	// 0..254
+			//v = (v > 0) ? v * 2 : 0;	// 0..254
+			v = SETTINGS.sound_to_color(v);	//0..255
 
 			// Drawpixel as pixsize x pixsize
 			int colors[4] = {

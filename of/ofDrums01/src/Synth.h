@@ -21,13 +21,21 @@ struct SynthSettings {
 
 	const float db0 = -40;
 	const float db1 = 0;
+	const float amp_from_db0 = util::db_to_amp(db0);
+	const float amp_from_db1 = util::db_to_amp(db1);
+
 	const int vol0 = 0;
 	const int vol1 = 127;
 
 	int max_samples() const;
 
+	uint8 sound_to_color(int8 sound);	// -127..127 -> db 0..255
 	void setup();
 	void load_json();
+
+protected:
+	void setup_sound_to_color();
+	vector<int> sound_to_color_;
 };
 
 class Synth {
